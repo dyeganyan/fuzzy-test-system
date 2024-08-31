@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Результаты теста</h1>
+
+    {% if message is defined %}
+        <p>{{ message }}</p>
+    {% else %}
+        <h2>Правильные ответы:</h2>
+        <ul>
+            {% for question in correctQuestions %}
+                <li>{{ question.text }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Ошибки:</h2>
+        <ul>
+            {% for question in incorrectQuestions %}
+                <li>{{ question.text }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{{ path('start_test') }}">Пройти тест заново</a>
+{% endblock %}

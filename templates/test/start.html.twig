@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Тест</h1>
+    <form method="post" action="{{ path('submit_test') }}">
+        {% for question in questions %}
+            <div>
+                <p>{{ question.text }}</p>
+                {% for answer in question.answers %}
+                    <div>
+                        <input type="checkbox" name="answers[{{ question.id }}][]" value="{{ loop.index - 1 }}">
+                        {{ answer.text }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit">Отправить</button>
+    </form>
+{% endblock %}

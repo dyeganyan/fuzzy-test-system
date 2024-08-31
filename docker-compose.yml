@@ -1,0 +1,55 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: symfony_app
+    command: php-fpm
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - "9001:9000"
+    networks:
+      - symfony
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:13
+    container_name: symfony_db
+    environment:
+      POSTGRES_USER: puser
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5433:5432"
+    networks:
+      - symfony
+    volumes:
+      - pgdb:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  nginx:
+    image: nginx:alpine
+    container_name: symfony_nginx
+    ports:
+      - "8081:80"
+    volumes:
+      - .:/app:cached
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - symfony
+
+networks:
+  symfony:
+    driver: bridge
+
+volumes:
+  pgdb:
