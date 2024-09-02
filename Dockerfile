@@ -13,7 +13,5 @@ WORKDIR /app
 COPY . /app
 RUN chmod +x /app/docker/entrypoint.sh
 
-RUN composer install
-
 EXPOSE 9000
 ENTRYPOINT ["sh", "/app/docker/entrypoint.sh"]
